@@ -1,0 +1,123 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📞 Enter Your Phone Number</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      text-align: center;
+      width: 320px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { color: #fff; margin-bottom: 20px; }
+
+    input[type="tel"] {
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #ffffff;
+      color: #007bff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover { background: #e0e0e0; }
+
+    #response {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .payment-logos {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .payment-logos img {
+      height: 40px;
+      width: 40px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📱 请输入您的电话号码</h2>
+    <input type="tel" placeholder="e.g. 123-456-7890" id="phoneInput" />
+    <br>
+    <button onclick="submitPhone()">提交</button>
+    <p id="response"></p>
+
+    <div class="payment-logos">
+      <img src="wechat.png" alt="WeChat Pay">
+      <img src="alipay.png" alt="Alipay">
+    </div>
+  </div>
+
+  <script>
+    async function submitPhone() {
+      const phone = document.getElementById("phoneInput").value;
+      const response = document.getElementById("response");
+
+      if (phone.trim() === "") {
+        response.textContent = "⚠️ 请输入电话号码.";
+        return;
+      }
+
+      try {
+        const res = await fetch('/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ phone })
+        });
+
+        const msg = await res.text();
+        response.innerHTML = `✅ ${msg} 📞`;
+      } catch (err) {
+        response.textContent = "❌ 提交号码时出错.";
+      }
+    }
+  </script>
+</body>
+</html>
